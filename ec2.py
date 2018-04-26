@@ -1,6 +1,7 @@
 import boto3
 from fabric.decorators import task
 
+amount = 1
 
 @task
 def create():

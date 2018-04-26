@@ -1,6 +1,7 @@
 import boto3
 from fabric.api import env, roles, task, run
 from fabric.operations import put
+from fabric.contrib import files
 
 ec2 = boto3.resource("ec2")
 instances = ec2.instances.filter(Filters=[{"Name": "instance-state-name", "Values": ["running"]}])
@@ -41,19 +42,24 @@ def docker():
     run("sudo apt-get -y install docker-ce")
     run("sudo docker pull docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.4")
 
+    if not files.exists("/home/ubuntu/config"):
+        run("mkdir /home/ubuntu/config")
+
     put("./docker-compose.yml", "/home/ubuntu/docker-compose.yml")
     put("./config/elastic.yml", "/home/ubuntu/config/elastic.yml")
     put("./config/kibana.yml", "/home/ubuntu/config/kibana.yml")
     put("./config/search.yml", "/home/ubuntu/config/search.yml")
 
     # Install docker compose
-    run("sudo apt-get install python-pip")
+    run("sudo apt-get install python-pip -y")
     run("pip install docker-compose")
 
 
 @roles("nodes")
 @task
 def config():
+    if not files.exists("/home/ubuntu/config"):
+        run("mkdir /home/ubuntu/config")
     put("./docker-compose.yml", "/home/ubuntu/docker-compose.yml")
     put("./config/elastic.yml", "/home/ubuntu/config/elastic.yml")
     put("./config/kibana.yml", "/home/ubuntu/config/kibana.yml")
