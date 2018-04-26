@@ -1,0 +1,66 @@
+version: "3.0"
+
+services:
+  elasticsearch1:
+    image:  docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.4
+    container_name: elasticsearch1
+    volumes:
+    - ./config/elastic.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - "9200:9200"
+      - "9300:9300" 
+    environment:
+      transport.host: "0.0.0.0"
+      http.host: "0.0.0.0"
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m" 
+    networks:
+      - elastic
+  elasticsearch2:
+    image:  docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.4
+    container_name: elasticsearch2
+    volumes:
+    - ./config/elastic.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - "9201:9200"
+      - "9301:9300"
+    environment:
+      transport.host: "0.0.0.0"
+      http.host: "0.0.0.0"
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elastic
+  searchnode:
+    depends_on:
+      - elasticsearch1
+      - elasticsearch2
+    image:  docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.4
+    container_name: searchnode
+    volumes:
+    - ./config/search.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - "9202:9200"
+      - "9302:9300"
+    environment:
+      transport.host: "0.0.0.0"
+      http.host: "0.0.0.0"
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elastic
+  kibana:
+    depends_on:
+      - elasticsearch1
+      - elasticsearch2
+      - searchnode
+    image: docker.elastic.co/kibana/kibana:6.2.4
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    volumes:
+      - ./config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    networks:
+      - elastic
+        
+networks:
+  elastic:
+    driver: bridge
+
