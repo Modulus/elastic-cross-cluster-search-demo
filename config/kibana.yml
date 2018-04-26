@@ -4,8 +4,10 @@ elasticsearch.url: http://searchnode:9200
 
 ## Disable X-Pack
 xpack.security.enabled: false
-xpack.monitoring.enabled: false
-xpack.ml.enabled: false
-xpack.graph.enabled: false
-xpack.reporting.enabled: false
+xpack.apm.ui.enabled: false
 xpack.grokdebugger.enabled: false
+xpack.searchprofiler.enabled: false
+xpack.graph.enabled: false
+xpack.ml.enabled: false
+xpack.monitoring.enabled: false
+xpack.reporting.enabled: false

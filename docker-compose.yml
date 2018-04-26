@@ -59,6 +59,10 @@ services:
       - ./config/kibana.yml:/usr/share/kibana/config/kibana.yml
     networks:
       - elastic
+    environment:
+      - XPACK_REPORTING_ENABLED=false
+      - XPACK_SECURITY_ENABLED=false
+      - XPACK_MONITORING_ENABLED=false
         
 networks:
   elastic:
