@@ -34,7 +34,6 @@ services:
       - elasticsearch1
       - elasticsearch2
     image:  docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.4
-    container_name: searchnode
     volumes:
     - ./config/search.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     ports:
@@ -51,7 +50,7 @@ services:
       - elasticsearch1
       - elasticsearch2
       - searchnode
-    image: docker.elastic.co/kibana/kibana:6.2.4
+    image: docker.elastic.co/kibana/kibana-oss:6.2.4
     container_name: kibana
     ports:
       - "5601:5601"
@@ -59,10 +58,10 @@ services:
       - ./config/kibana.yml:/usr/share/kibana/config/kibana.yml
     networks:
       - elastic
-    environment:
-      - XPACK_REPORTING_ENABLED=false
-      - XPACK_SECURITY_ENABLED=false
-      - XPACK_MONITORING_ENABLED=false
+   # environment:
+   #   - XPACK_REPORTING_ENABLED=false
+   #   - XPACK_SECURITY_ENABLED=false
+   #   - XPACK_MONITORING_ENABLED=false
         
 networks:
   elastic:

@@ -21,9 +21,12 @@ def nodes():
     print("nodes available")
     for instance in [instance for instance in instances]:
         name = None
-        for tag in instance.tags:
-            if tag["Key"] == "Name":
-                name = tag["Value"]
+        try:
+            for tag in instance.tags:
+                if tag["Key"] == "Name":
+                    name = tag["Value"]
+        except TypeError:
+            print("Failed to get tags for instance: {}\n".format(instance.id))
         print("id: {}, Name: {}, public_ip: {}, private_ip: {}".format(instance.id, name, instance.public_ip_address, instance.private_ip_address))
 @task
 def check():
